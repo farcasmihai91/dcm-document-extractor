@@ -16,13 +16,12 @@ if (fs.existsSync(dcmDirectory)) {
   extractor.extractEmbeddedDocument(dcmDirectory).then(
     function (buffer) {
       fs.writeFile(path.join(outDirectory, 'embeddedfile.pdf'), buffer, 'utf8', function (err) {
-        if(err){
+        if (err) {
           return console.log(err);
         }
         console.log('success');
       });
-    }
-  );
+    });
 } else {
   console.log('ERROR: No file at source')
 }
