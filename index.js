@@ -12,16 +12,45 @@ var outDirectory = options.outDirectory
 
 console.log(`from ${dcmDirectory} to ${outDirectory}`);
 
-if (fs.existsSync(dcmDirectory)) {
-  extractor.extractEmbeddedDocument(dcmDirectory).then(
-    function (buffer) {
-      fs.writeFile(path.join(outDirectory, 'embeddedfile.pdf'), buffer, 'utf8', function (err) {
-        if (err) {
-          return console.log(err);
-        }
-        console.log('success');
+
+fs.lstat(dcmDirectory, function (err, stats) {
+  if (err) {
+    var error = new Error(`ERROR: source file or folder does not exist.`)
+    console.log(error);
+    return;
+  }
+  if (stats.isDirectory()) {
+    var files = fs.readdirSync(dcmDirectory);
+    for (var i in files) {
+      var extname = path.extname(files[i]);
+      if (extname === '.dcm') {
+        var inPath = path.join(dcmDirectory, files[i]);
+        var basename = path.basename(files[i], '.dcm') + '.pdf';
+        extractor.extractEmbeddedDocument(inPath).then(
+          function (buffer) {
+            fs.writeFile(path.join(outDirectory, basename), buffer, 'utf8', function (err) {
+              if (err) {
+                return console.log(err);
+              }
+              console.log('success');
+            });
+          }).catch(function (reason) {
+            console.log(reason);
+          });
+      }
+    }
+  } else if (stats.isFile()) {
+    var basename = path.basename(dcmDirectory, '.dcm') + '.pdf';
+    extractor.extractEmbeddedDocument(dcmDirectory).then(
+      function (buffer) {
+        fs.writeFile(path.join(outDirectory, basename), buffer, 'utf8', function (err) {
+          if (err) {
+            return console.log(err);
+          }
+          console.log('success');
+        });
+      }).catch(function (reason) {
+        console.log(reason);
       });
-    });
-} else {
-  console.log('ERROR: No file at source')
-}
+  }
+})
