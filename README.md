@@ -1,6 +1,6 @@
 <h1># dcm-document-extractor<h1>
 <h2>Cross-platform shell script that extracts the embedded PDF document from a DICOM file.</h2>
-<p>Prerequisites:
+<p>Prerequisites:<br>
  - Install node https://nodejs.org/<br>
  - run: 'npm install' from the script's folder.<p>
 <p>To run use: <i><b> node ./index.js -i 'dicom/path' -o 'pdf/path'.</b></i> from the script's location.<br>
