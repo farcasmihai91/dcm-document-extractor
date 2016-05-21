@@ -11,16 +11,15 @@ function extractEmbeddedDocument(path) {
           var dataSet = dicomParser.parseDicom(byteArray);
           var instance = dicomParser.explicitDataSetToJS(dataSet);
 
-          var documentTitle = instance.x00420010;
-
-          if (!documentTitle) {
-            reject(new Error('ERROR: DICOM file does not have an embedded document'));
+          // var documentTitle = instance.x00420010;
+          var mimeType = instance.x00420012;
+          if (mimeType !== 'application/pdf') {
+            reject(new Error('DICOM file does not have an embedded document, or the embedded document is not a PDF.'));
             return;
           }
           var documentStartByte = instance.x00420011.dataOffset;
           var documentLength = instance.x00420011.length;
-          
-          console.log(`MIME Type of Encapsulated Document ${instance.x00420012}`);
+
           var deflated = byteArray.slice(documentStartByte, (documentStartByte + documentLength));
           var buf = new Buffer(deflated);
           resolve(buf);

@@ -15,7 +15,7 @@ console.log(`from ${dcmDirectory} to ${outDirectory}`);
 
 fs.lstat(dcmDirectory, function (err, stats) {
   if (err) {
-    var error = new Error(`ERROR: source file or folder does not exist.`)
+    var error = new Error(`Source file or folder does not exist.`)
     console.log(error);
     return;
   }
@@ -32,10 +32,10 @@ fs.lstat(dcmDirectory, function (err, stats) {
               if (err) {
                 return console.log(err);
               }
-              console.log('success');
+              console.log(`File written: ${basename}`);
             });
           }).catch(function (reason) {
-            console.log(reason);
+            console.log(`File ${basename} cannot be written, ${reason}`);
           });
       }
     }
@@ -47,7 +47,7 @@ fs.lstat(dcmDirectory, function (err, stats) {
           if (err) {
             return console.log(err);
           }
-          console.log('success');
+          console.log(`File written: ${basename}`);
         });
       }).catch(function (reason) {
         console.log(reason);
